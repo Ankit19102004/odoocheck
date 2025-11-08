@@ -13,11 +13,25 @@ const Dashboard = () => {
   const { data: projects, isLoading: projectsLoading, error: projectsError } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-      const response = await api.get("/api/projects");
-      return response.data.data;
+      try {
+        const response = await api.get("/api/projects");
+        if (response.data && response.data.success) {
+          return response.data.data || [];
+        }
+        throw new Error(response.data?.error || 'Failed to load projects');
+      } catch (err: any) {
+        console.error('Failed to load projects:', err);
+        if (err.response?.data?.error) {
+          throw new Error(err.response.data.error);
+        }
+        if (err.message) {
+          throw err;
+        }
+        throw new Error('Failed to load projects. Please check your connection and try again.');
+      }
     },
     retry: 1,
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Failed to load projects:', error);
     },
   });

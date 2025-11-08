@@ -30,14 +30,28 @@ const Projects: React.FC = () => {
   } = useQuery({
     queryKey: ["projects", statusFilter, searchQuery],
     queryFn: async () => {
-      const params: any = {};
-      if (statusFilter) params.status = statusFilter;
-      if (searchQuery) params.search = searchQuery;
-      const response = await api.get("/api/projects", { params });
-      return response.data.data;
+      try {
+        const params: any = {};
+        if (statusFilter) params.status = statusFilter;
+        if (searchQuery) params.search = searchQuery;
+        const response = await api.get("/api/projects", { params });
+        if (response.data && response.data.success) {
+          return response.data.data || [];
+        }
+        throw new Error(response.data?.error || 'Failed to load projects');
+      } catch (err: any) {
+        console.error("Failed to load projects:", err);
+        if (err.response?.data?.error) {
+          throw new Error(err.response.data.error);
+        }
+        if (err.message) {
+          throw err;
+        }
+        throw new Error('Failed to load projects. Please check your connection and try again.');
+      }
     },
     retry: 1,
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Failed to load projects:", error);
     },
   });
@@ -87,7 +101,9 @@ const Projects: React.FC = () => {
       {isLoading && <div className="loading">Loading projects...</div>}{" "}
       {error && (
         <div className="error">
-          Failed to load projects. Please try again later.
+          <strong>Error loading projects:</strong> {error instanceof Error ? error.message : 'Failed to load projects. Please try again later.'}
+          <br />
+          <small>If this persists, please check your connection and ensure the backend server is running.</small>
         </div>
       )}{" "}
       {!isLoading && !error && (

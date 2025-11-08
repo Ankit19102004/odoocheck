@@ -12,23 +12,29 @@ export const getProjects = async (req: Request, res: Response, next: NextFunctio
   try {
     const { status, manager_id, search } = req.query;
     const user = req.user;
+    
+    if (!user) {
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
+    }
+
     const where: any = {};
 
     // Role-based filtering
-    if (user?.role === 'team_member') {
+    if (user.role === 'team_member') {
       // Team members can only see projects they're assigned to (via tasks)
       const userTasks = await Task.findAll({
         where: { assignee_id: user.id },
         attributes: ['project_id'],
         raw: true,
       });
-      const projectIds = [...new Set(userTasks.map((t: any) => t.project_id))];
+      const projectIds = [...new Set(userTasks.map((t: any) => t.project_id).filter((id: any) => id !== null))];
       if (projectIds.length === 0) {
         res.json({ success: true, data: [] });
         return;
       }
       where.id = { [Op.in]: projectIds };
-    } else if (user?.role === 'project_manager') {
+    } else if (user.role === 'project_manager') {
       // Project managers can only see projects they manage
       where.manager_id = user.id;
     }
@@ -37,7 +43,7 @@ export const getProjects = async (req: Request, res: Response, next: NextFunctio
     if (status) {
       where.status = status;
     }
-    if (manager_id && (user?.role === 'admin' || user?.role === 'sales_finance')) {
+    if (manager_id && (user.role === 'admin' || user.role === 'sales_finance')) {
       where.manager_id = manager_id;
     }
     if (search) {
@@ -50,9 +56,22 @@ export const getProjects = async (req: Request, res: Response, next: NextFunctio
     const projects = await Project.findAll({
       where,
       include: [
-        { model: User, as: 'manager', attributes: ['id', 'first_name', 'last_name', 'email', 'avatar_url'] },
-        { model: ProjectTag, as: 'tags' },
-        { model: Task, as: 'tasks' },
+        { 
+          model: User, 
+          as: 'manager', 
+          attributes: ['id', 'first_name', 'last_name', 'email', 'avatar_url'],
+          required: false,
+        },
+        { 
+          model: ProjectTag, 
+          as: 'tags',
+          required: false,
+        },
+        { 
+          model: Task, 
+          as: 'tasks',
+          required: false,
+        },
       ],
       order: [['created_at', 'DESC']],
     });
@@ -62,6 +81,7 @@ export const getProjects = async (req: Request, res: Response, next: NextFunctio
       data: projects,
     });
   } catch (error: any) {
+    logger.error('Error fetching projects:', error);
     next(error);
   }
 };
