@@ -10,6 +10,17 @@ export interface IUser {
   avatar_url?: string;
   created_at: Date;
   updated_at: Date;
+  skills?: IUserSkill[];
+}
+
+// User Skill Types
+export interface IUserSkill {
+  id: number;
+  user_id: number;
+  skill_name: string;
+  proficiency_level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  created_at: Date;
+  updated_at: Date;
 }
 
 // Project Types
@@ -45,6 +56,7 @@ export interface ITask {
   priority: 'low' | 'medium' | 'high';
   deadline?: Date;
   time_estimate?: number;
+  required_skills?: string[];
   created_at: Date;
   updated_at: Date;
   assignee?: IUser;

@@ -42,9 +42,12 @@ const Team: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setShowAddForm(false);
       resetForm();
+      setError(''); // Clear any previous errors
     },
     onError: (error: any) => {
-      setError(error.response?.data?.error || 'Failed to create user');
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to create user';
+      setError(errorMessage);
+      console.error('Create user error:', error);
     },
   });
 
@@ -99,11 +102,29 @@ const Team: React.FC = () => {
     e.preventDefault();
     setError('');
 
+    // Validate required fields
+    if (!formData.first_name.trim()) {
+      setError('First name is required');
+      return;
+    }
+    if (!formData.last_name.trim()) {
+      setError('Last name is required');
+      return;
+    }
+    if (!formData.email.trim()) {
+      setError('Email is required');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
     if (editingUser) {
       const updateData: any = {
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        email: formData.email,
+        first_name: formData.first_name.trim(),
+        last_name: formData.last_name.trim(),
+        email: formData.email.trim(),
         role: formData.role,
         hourly_rate: formData.hourly_rate ? parseFloat(formData.hourly_rate) : 0,
       };
@@ -112,14 +133,14 @@ const Team: React.FC = () => {
       }
       updateMutation.mutate({ id: editingUser.id, data: updateData });
     } else {
-      if (!formData.password) {
-        setError('Password is required for new users');
+      if (!formData.password || formData.password.length < 6) {
+        setError('Password is required and must be at least 6 characters');
         return;
       }
       createMutation.mutate({
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        email: formData.email,
+        first_name: formData.first_name.trim(),
+        last_name: formData.last_name.trim(),
+        email: formData.email.trim(),
         password: formData.password,
         role: formData.role,
         hourly_rate: formData.hourly_rate ? parseFloat(formData.hourly_rate) : 0,

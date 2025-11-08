@@ -27,8 +27,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, projectId, onClose, onSuccess
     priority: task?.priority || 'medium',
     deadline: task?.deadline ? new Date(task.deadline).toISOString().split('T')[0] : '',
     time_estimate: task?.time_estimate?.toString() || '',
+    required_skills: (task?.required_skills || []) as string[],
   });
   const [error, setError] = useState('');
+  const [skillInput, setSkillInput] = useState('');
+  const [suggestedAssignees, setSuggestedAssignees] = useState<any[]>([]);
 
   // Fetch projects
   const { data: projects } = useQuery({
@@ -50,6 +53,40 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, projectId, onClose, onSuccess
     },
     retry: 1,
   });
+
+  // Fetch all available skills
+  const { data: allSkills } = useQuery({
+    queryKey: ['all-skills'],
+    queryFn: async () => {
+      const response = await api.get('/api/skills/all');
+      return response.data.data as string[];
+    },
+    retry: 1,
+  });
+
+  // Fetch suggested assignees when skills change
+  const { data: suggestions } = useQuery({
+    queryKey: ['suggested-assignees', formData.required_skills],
+    queryFn: async () => {
+      if (!formData.required_skills || formData.required_skills.length === 0) {
+        return [];
+      }
+      const response = await api.get('/api/skills/suggestions', {
+        params: { required_skills: formData.required_skills },
+      });
+      return response.data.data;
+    },
+    enabled: formData.required_skills && formData.required_skills.length > 0,
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (suggestions && Array.isArray(suggestions)) {
+      setSuggestedAssignees(suggestions);
+    } else {
+      setSuggestedAssignees([]);
+    }
+  }, [suggestions]);
 
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -107,10 +144,39 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, projectId, onClose, onSuccess
       submitData.assignee_id = parseInt(formData.assignee_id);
     }
 
+    if (formData.required_skills && formData.required_skills.length > 0) {
+      submitData.required_skills = formData.required_skills;
+    }
+
     if (isEditing) {
       updateMutation.mutate(submitData);
     } else {
       createMutation.mutate(submitData);
+    }
+  };
+
+  const addSkill = () => {
+    const skill = skillInput.trim();
+    if (skill && !formData.required_skills.includes(skill)) {
+      setFormData(prev => ({
+        ...prev,
+        required_skills: [...prev.required_skills, skill],
+      }));
+      setSkillInput('');
+    }
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      required_skills: prev.required_skills.filter(s => s !== skillToRemove),
+    }));
+  };
+
+  const handleSkillKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addSkill();
     }
   };
 
@@ -252,6 +318,62 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, projectId, onClose, onSuccess
               step="0.5"
               placeholder="0"
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="required_skills">Required Skills</label>
+            <div className="skill-input-container">
+              <input
+                type="text"
+                id="skill-input"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyPress={handleSkillKeyPress}
+                placeholder="Type a skill and press Enter"
+                list="skills-list"
+              />
+              <datalist id="skills-list">
+                {allSkills?.map((skill: string) => (
+                  <option key={skill} value={skill} />
+                ))}
+              </datalist>
+              <button type="button" onClick={addSkill} className="btn-add-skill">
+                Add
+              </button>
+            </div>
+            {formData.required_skills.length > 0 && (
+              <div className="skills-list">
+                {formData.required_skills.map((skill) => (
+                  <span key={skill} className="skill-tag">
+                    {skill}
+                    <button
+                      type="button"
+                      onClick={() => removeSkill(skill)}
+                      className="skill-remove"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            {suggestedAssignees.length > 0 && (
+              <div className="suggested-assignees">
+                <p className="suggestions-label">Suggested Assignees:</p>
+                {suggestedAssignees.slice(0, 5).map((suggestion: any) => (
+                  <div
+                    key={suggestion.user.id}
+                    className="suggestion-item"
+                    onClick={() => setFormData(prev => ({ ...prev, assignee_id: suggestion.user.id.toString() }))}
+                  >
+                    <span>{suggestion.user.first_name} {suggestion.user.last_name}</span>
+                    <span className="match-score">
+                      {suggestion.match_percentage}% match ({suggestion.matching_skills.length} skills)
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="form-actions">

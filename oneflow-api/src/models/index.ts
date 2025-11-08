@@ -11,12 +11,15 @@ import VendorBill from './VendorBill';
 import Expense from './Expense';
 import Product from './Product';
 import Attachment from './Attachment';
+import UserSkill from './UserSkill';
 
 // Define all associations
 User.hasMany(Project, { foreignKey: 'manager_id', as: 'managed_projects' });
 User.hasMany(Task, { foreignKey: 'assignee_id', as: 'assigned_tasks' });
 User.hasMany(Timesheet, { foreignKey: 'user_id', as: 'timesheets' });
 User.hasMany(Expense, { foreignKey: 'user_id', as: 'expenses' });
+User.hasMany(UserSkill, { foreignKey: 'user_id', as: 'skills' });
+UserSkill.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 const db = {
   sequelize,
@@ -32,6 +35,7 @@ const db = {
   Expense,
   Product,
   Attachment,
+  UserSkill,
 };
 
 export default db;

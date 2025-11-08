@@ -9,6 +9,7 @@ import invoiceRoutes from './invoices';
 import vendorBillRoutes from './vendorBills';
 import expenseRoutes from './expenses';
 import userRoutes from './users';
+import skillRoutes from './skills';
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.use('/invoices', invoiceRoutes);
 router.use('/vendor-bills', vendorBillRoutes);
 router.use('/expenses', expenseRoutes);
 router.use('/users', userRoutes);
+router.use('/skills', skillRoutes);
 
 export default router;
 

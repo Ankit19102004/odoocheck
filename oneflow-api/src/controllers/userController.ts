@@ -114,25 +114,49 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     const { first_name, last_name, email, password, role, hourly_rate } = req.body;
 
-    if (!first_name || !last_name || !email || !password) {
-      res.status(400).json({ success: false, error: 'Missing required fields' });
+    // Validate required fields
+    if (!first_name || !first_name.trim()) {
+      res.status(400).json({ success: false, error: 'First name is required' });
+      return;
+    }
+    if (!last_name || !last_name.trim()) {
+      res.status(400).json({ success: false, error: 'Last name is required' });
+      return;
+    }
+    if (!email || !email.trim()) {
+      res.status(400).json({ success: false, error: 'Email is required' });
+      return;
+    }
+    if (!password || password.length < 6) {
+      res.status(400).json({ success: false, error: 'Password is required and must be at least 6 characters' });
       return;
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      res.status(400).json({ success: false, error: 'Invalid email format' });
+      return;
+    }
+
+    // Validate role
+    const validRoles = ['admin', 'project_manager', 'team_member', 'sales_finance'];
+    const userRole = role && validRoles.includes(role) ? role : 'team_member';
+
     // Check if user already exists
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await User.findOne({ where: { email: email.trim().toLowerCase() } });
     if (existingUser) {
       res.status(400).json({ success: false, error: 'User with this email already exists' });
       return;
     }
 
     const user = await User.create({
-      first_name,
-      last_name,
-      email,
-      password_hash: password,
-      role: role || 'team_member',
-      hourly_rate: hourly_rate || 0,
+      first_name: first_name.trim(),
+      last_name: last_name.trim(),
+      email: email.trim().toLowerCase(),
+      password_hash: password, // Will be hashed by model hook
+      role: userRole,
+      hourly_rate: hourly_rate ? parseFloat(hourly_rate.toString()) : 0,
     });
 
     const newUser = await User.findByPk(user.id, {
@@ -141,6 +165,17 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     res.status(201).json({ success: true, data: newUser });
   } catch (error: any) {
+    // Handle Sequelize validation errors
+    if (error.name === 'SequelizeValidationError') {
+      const messages = error.errors.map((e: any) => e.message).join(', ');
+      res.status(400).json({ success: false, error: messages });
+      return;
+    }
+    // Handle unique constraint errors
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      res.status(400).json({ success: false, error: 'User with this email already exists' });
+      return;
+    }
     next(error);
   }
 };
