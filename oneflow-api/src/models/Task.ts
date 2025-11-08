@@ -13,7 +13,7 @@ interface TaskAttributes {
   priority: 'low' | 'medium' | 'high';
   deadline?: Date;
   time_estimate?: number;
-  required_skills?: string[];
+  // required_skills?: string[]; // Temporarily commented out until migration is run
   created_at: Date;
   updated_at: Date;
 }
@@ -30,7 +30,7 @@ class Task extends Model<TaskAttributes, TaskCreationAttributes> implements Task
   public priority!: 'low' | 'medium' | 'high';
   public deadline?: Date;
   public time_estimate?: number;
-  public required_skills?: string[];
+  // public required_skills?: string[]; // Temporarily commented out until migration is run
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
 
@@ -88,11 +88,13 @@ Task.init(
       type: DataTypes.DECIMAL(8, 2),
       allowNull: true,
     },
-    required_skills: {
-      type: DataTypes.JSON,
-      allowNull: true,
-      comment: 'Array of required skill names for this task',
-    },
+    // required_skills: Temporarily commented out until database migration is run
+    // Uncomment after running: oneflow-db/RUN-THIS-NOW.sql
+    // required_skills: {
+    //   type: DataTypes.JSON,
+    //   allowNull: true,
+    //   comment: 'Array of required skill names for this task',
+    // },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

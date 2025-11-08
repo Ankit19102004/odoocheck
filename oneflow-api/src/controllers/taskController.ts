@@ -98,7 +98,7 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    const { project_id, title, description, assignee_id, status, priority, deadline, time_estimate, required_skills } = req.body;
+    const { project_id, title, description, assignee_id, status, priority, deadline, time_estimate } = req.body;
 
     const task = await Task.create({
       project_id,
@@ -109,7 +109,7 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
       priority: priority || 'medium',
       deadline,
       time_estimate,
-      required_skills: required_skills && Array.isArray(required_skills) ? required_skills : undefined,
+      // required_skills: Temporarily disabled until migration is run
     });
 
     const taskWithRelations = await Task.findByPk(task.id, {
@@ -170,7 +170,7 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
         priority,
         deadline,
         time_estimate,
-        required_skills: req.body.required_skills && Array.isArray(req.body.required_skills) ? req.body.required_skills : task.required_skills,
+        // required_skills: Temporarily disabled until migration is run
       });
     } else {
       // Admin can update anything
@@ -182,7 +182,7 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
         priority,
         deadline,
         time_estimate,
-        required_skills: req.body.required_skills && Array.isArray(req.body.required_skills) ? req.body.required_skills : task.required_skills,
+        // required_skills: Temporarily disabled until migration is run
       });
     }
 

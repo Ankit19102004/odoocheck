@@ -144,9 +144,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, projectId, onClose, onSuccess
       submitData.assignee_id = parseInt(formData.assignee_id);
     }
 
-    if (formData.required_skills && formData.required_skills.length > 0) {
-      submitData.required_skills = formData.required_skills;
-    }
+    // Temporarily disabled until database migration is run
+    // if (formData.required_skills && formData.required_skills.length > 0) {
+    //   submitData.required_skills = formData.required_skills;
+    // }
 
     if (isEditing) {
       updateMutation.mutate(submitData);
@@ -320,6 +321,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, projectId, onClose, onSuccess
             />
           </div>
 
+          {/* Skills feature temporarily disabled until database migration is run */}
+          {/* Uncomment after running: oneflow-db/RUN-THIS-NOW.sql */}
+          {/* 
           <div className="form-group">
             <label htmlFor="required_skills">Required Skills</label>
             <div className="skill-input-container">
@@ -375,6 +379,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, projectId, onClose, onSuccess
               </div>
             )}
           </div>
+          */}
 
           <div className="form-actions">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
