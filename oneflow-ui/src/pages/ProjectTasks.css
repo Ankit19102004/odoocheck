@@ -1,0 +1,125 @@
+.task-page {
+  padding: 2rem;
+  background-color: #F5C2A0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.task-title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #8B4A3A;
+  margin: 0;
+}
+
+.task-subtitle {
+  font-size: 1.5rem;
+  color: #B87A6A;
+  margin-top: 0.25rem;
+}
+
+.create-task-btn {
+  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
+  color: #8B4A3A;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.create-task-btn:hover {
+  background: linear-gradient(90deg, #9B8FA8 0%, #D8C5E0 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(232, 213, 240, 0.4);
+}
+
+.create-task-form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #475569;
+}
+
+/* Optional styling for Kanban columns (if not already handled) */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.kanban-column {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1rem;
+  min-height: 400px;
+}
+
+.kanban-column h3 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.task-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.task-tag {
+  display: inline-block;
+  background: #e2e8f0;
+  color: #334155;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.task-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-top: 0.5rem;
+}
+
+.priority-high {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.priority-medium {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.priority-low {
+  color: #10b981;
+  font-weight: 600;
+}
