@@ -14,7 +14,9 @@ import {
   FiGrid,
   FiSearch,
   FiBell,
-  FiChevronDown
+  FiChevronDown,
+  FiCheck,
+  FiX
 } from 'react-icons/fi';
 
 const Layout: React.FC = () => {
@@ -22,8 +24,35 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [globalSearch, setGlobalSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
+  
+  // Sample notifications - can be replaced with API call later
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      type: 'task',
+      message: 'New task assigned to you: "Update project documentation"',
+      time: '2 hours ago',
+      read: false,
+    },
+    {
+      id: 2,
+      type: 'project',
+      message: 'Project "Website Redesign" deadline is approaching',
+      time: '5 hours ago',
+      read: false,
+    },
+    {
+      id: 3,
+      type: 'system',
+      message: 'Your timesheet for this week is pending submission',
+      time: '1 day ago',
+      read: false,
+    },
+  ]);
 
   const handleLogout = () => {
     logout();
@@ -37,16 +66,35 @@ const Layout: React.FC = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
       }
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setNotificationOpen(false);
+      }
     };
 
-    if (dropdownOpen) {
+    if (dropdownOpen || notificationOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [dropdownOpen]);
+  }, [dropdownOpen, notificationOpen]);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const markAsRead = (id: number) => {
+    setNotifications(prev => 
+      prev.map(notif => notif.id === id ? { ...notif, read: true } : notif)
+    );
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(notif => ({ ...notif, read: true })));
+  };
+
+  const deleteNotification = (id: number) => {
+    setNotifications(prev => prev.filter(notif => notif.id !== id));
+  };
 
   const getInitials = () => {
     if (user?.first_name && user?.last_name) {
@@ -221,10 +269,73 @@ const Layout: React.FC = () => {
           </div>
 
           <div className="topbar-right">
-            <button className="notification-btn">
-              <FiBell className="notification-icon" />
-              <span className="notif-badge">3</span>
-            </button>
+            <div 
+              className="notification-container" 
+              ref={notificationRef}
+            >
+              <button 
+                className="notification-btn"
+                onClick={() => setNotificationOpen(!notificationOpen)}
+              >
+                <FiBell className="notification-icon" />
+                {unreadCount > 0 && (
+                  <span className="notif-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                )}
+              </button>
+
+              {notificationOpen && (
+                <div className="notification-dropdown">
+                  <div className="notification-dropdown-header">
+                    <h3>Notifications</h3>
+                    {unreadCount > 0 && (
+                      <button 
+                        className="mark-all-read-btn"
+                        onClick={markAllAsRead}
+                      >
+                        Mark all as read
+                      </button>
+                    )}
+                  </div>
+                  <div className="notification-dropdown-content">
+                    {notifications.length === 0 ? (
+                      <div className="notification-empty">
+                        <p>No notifications</p>
+                      </div>
+                    ) : (
+                      notifications.map((notification) => (
+                        <div 
+                          key={notification.id} 
+                          className={`notification-item ${!notification.read ? 'unread' : ''}`}
+                        >
+                          <div className="notification-content">
+                            <p className="notification-message">{notification.message}</p>
+                            <span className="notification-time">{notification.time}</span>
+                          </div>
+                          <div className="notification-actions">
+                            {!notification.read && (
+                              <button
+                                className="notification-action-btn"
+                                onClick={() => markAsRead(notification.id)}
+                                title="Mark as read"
+                              >
+                                <FiCheck />
+                              </button>
+                            )}
+                            <button
+                              className="notification-action-btn delete-btn"
+                              onClick={() => deleteNotification(notification.id)}
+                              title="Delete"
+                            >
+                              <FiX />
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div 
               className="user-profile-dropdown-container" 
