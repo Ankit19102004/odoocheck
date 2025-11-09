@@ -139,7 +139,7 @@
 }
 
 .sidebar-user-role {
-  font-size: 1rem;
+  font-size: 0.65rem;
   color: #E0E0E0;
   margin-top: 0.125rem;
 }
@@ -379,7 +379,7 @@
 }
 
 .notification-dropdown-header h3 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #1e293b;
   margin: 0;
@@ -389,7 +389,7 @@
   background: none;
   border: none;
   color: #4a7cff;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
@@ -448,7 +448,7 @@
 }
 
 .notification-message {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #1e293b;
   margin: 0 0 0.5rem 0;
   line-height: 1.5;
@@ -560,7 +560,7 @@
 }
 
 .user-profile-role {
-  font-size: 1rem;
+  font-size: 0.65rem;
   color: #9E9E9E;
 }
 
