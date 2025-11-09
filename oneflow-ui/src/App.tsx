@@ -10,6 +10,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import EditProject from './pages/EditProject';
 import NewProject from './pages/NewProject';
 import ProjectTasks from './pages/ProjectTasks';
+import ProjectSettings from './pages/ProjectSettings';
 import TaskBoard from './pages/TaskBoard';
 import BillingPage from './pages/BillingPage';
 import Team from './pages/Team';
@@ -99,6 +100,7 @@ const AppRoutes: React.FC = () => {
         <Route path="projects/:id" element={<ProjectDetail />} />
         <Route path="projects/:id/edit" element={<EditProject />} />
         <Route path="projects/:id/tasks" element={<ProjectTasks />} />
+        <Route path="projects/:id/settings" element={<ProjectSettings />} />
         <Route path="task-board" element={<TaskBoard />} />
         <Route path="billing" element={<BillingPage />} />
         <Route path="team" element={<Team />} />

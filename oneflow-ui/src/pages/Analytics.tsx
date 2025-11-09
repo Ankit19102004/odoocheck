@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
 import { FiBarChart2, FiTrendingUp, FiTrendingDown } from 'react-icons/fi';
 import './Analytics.css';
 
 const Analytics: React.FC = () => {
+  const [previousCompletionRate, setPreviousCompletionRate] = useState<number | null>(null);
+
   const { data: projects, isLoading: projectsLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
@@ -26,9 +28,47 @@ const Analytics: React.FC = () => {
   // Calculate analytics
   const totalProjects = projects?.length || 0;
   const activeProjects = projects?.filter((p: any) => p.status === 'active').length || 0;
+  const completedProjects = projects?.filter((p: any) => p.status === 'completed').length || 0;
   const totalTasks = tasks?.length || 0;
-  const completedTasks = tasks?.filter((t: any) => t.status === 'completed').length || 0;
-  const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const completedTasks = tasks?.filter((t: any) => t.status === 'done').length || 0;
+  
+  // Calculate completion rate: consider both task completion and project completion
+  let completionRate = 0;
+  if (totalTasks > 0) {
+    // Base completion on tasks
+    const taskCompletionRate = (completedTasks / totalTasks) * 100;
+    // Boost completion rate if projects are completed
+    const projectCompletionBoost = completedProjects > 0 ? (completedProjects / totalProjects) * 20 : 0;
+    completionRate = Math.min(100, Math.round(taskCompletionRate + projectCompletionBoost));
+  } else if (completedProjects > 0 && totalProjects > 0) {
+    // If no tasks but projects are completed, show project completion rate
+    completionRate = Math.round((completedProjects / totalProjects) * 100);
+  }
+
+  // Track completion rate changes
+  useEffect(() => {
+    const storedRate = localStorage.getItem('previousCompletionRate');
+    if (storedRate) {
+      setPreviousCompletionRate(parseFloat(storedRate));
+    }
+    
+    // Store current rate for next time
+    if (completionRate > 0) {
+      localStorage.setItem('previousCompletionRate', completionRate.toString());
+    }
+  }, [completionRate]);
+
+  // Calculate trend
+  const completionRateChange = previousCompletionRate !== null 
+    ? completionRate - previousCompletionRate 
+    : 0;
+  const isIncreasing = completionRateChange > 0;
+  const isDecreasing = completionRateChange < 0;
+  const trendText = isIncreasing 
+    ? `+${completionRateChange.toFixed(1)}% from last view` 
+    : isDecreasing 
+    ? `${completionRateChange.toFixed(1)}% from last view`
+    : 'No change';
 
   return (
     <div className="analytics-container">
@@ -74,9 +114,9 @@ const Analytics: React.FC = () => {
                 <FiBarChart2 className="analytics-icon" />
               </div>
               <div className="analytics-value">{completionRate}%</div>
-              <div className="analytics-change positive">
-                <FiTrendingUp />
-                <span>On track</span>
+              <div className={`analytics-change ${isIncreasing ? 'positive' : isDecreasing ? 'negative' : 'neutral'}`}>
+                {isIncreasing ? <FiTrendingUp /> : isDecreasing ? <FiTrendingDown /> : <FiBarChart2 />}
+                <span>{trendText}</span>
               </div>
             </div>
 

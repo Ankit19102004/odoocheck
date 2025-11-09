@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
-import { FiCalendar, FiMoreVertical } from 'react-icons/fi';
+import { FiCalendar, FiMoreVertical, FiEdit2 } from 'react-icons/fi';
 import api from '../services/api';
+import TaskForm from './TaskForm';
 import type { ITask, IProject } from '@shared';
 import './KanbanBoard.css';
 
@@ -13,6 +14,7 @@ interface KanbanBoardProps {
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
   const queryClient = useQueryClient();
+  const [editingTask, setEditingTask] = useState<ITask | null>(null);
 
   // Fetch projects for task cards
   const { data: projects } = useQuery({
@@ -96,8 +98,20 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="kanban-board">
+    <>
+      {editingTask && (
+        <TaskForm
+          task={editingTask}
+          projectId={editingTask.project_id}
+          onClose={() => setEditingTask(null)}
+          onSuccess={() => {
+            setEditingTask(null);
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+          }}
+        />
+      )}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="kanban-board">
         {columns.map((column) => {
           const columnTasks = getTasksByStatus(column.id);
           return (
@@ -129,10 +143,22 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
                             className={`task-card ${snapshot.isDragging ? 'dragging' : ''}`}
                           >
                             <div className="task-card-header">
-                              <h4 className="task-title">{task.title}</h4>
-                              <button className="task-more-btn">
-                                <FiMoreVertical />
-                              </button>
+                              <h4 className="task-title" title={task.title}>{task.title}</h4>
+                              <div className="task-actions">
+                                <button 
+                                  className="task-edit-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingTask(task);
+                                  }}
+                                  title="Edit Task"
+                                >
+                                  <FiEdit2 />
+                                </button>
+                                <button className="task-more-btn">
+                                  <FiMoreVertical />
+                                </button>
+                              </div>
                             </div>
 
                             <div className="task-project-tag">
@@ -142,7 +168,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
                             <div className="task-meta">
                               <div className="task-due-date">
                                 <FiCalendar className="task-icon" />
-                                <span>Due: {formatDate(task.due_date)}</span>
+                                <span>Due: {formatDate(task.deadline?.toString())}</span>
                               </div>
                               <div className={`task-priority priority-${getPriorityColor(task.priority)}`}>
                                 {task.priority || 'Medium'}
@@ -180,6 +206,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
         })}
       </div>
     </DragDropContext>
+    </>
   );
 };
 

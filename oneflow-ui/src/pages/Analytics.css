@@ -86,6 +86,10 @@
   color: #ef4444;
 }
 
+.analytics-change.neutral {
+  color: #64748b;
+}
+
 .analytics-charts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
