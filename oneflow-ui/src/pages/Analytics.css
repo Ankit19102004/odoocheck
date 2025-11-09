@@ -96,22 +96,34 @@
   gap: 1.5rem;
 }
 
-.chart-placeholder {
+.chart-card {
   background: #fff;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.chart-placeholder h3 {
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card h3 {
   font-size: 1.125rem;
   font-weight: 600;
   color: #1e293b;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
-.chart-placeholder p {
+.chart-card-full {
+  grid-column: 1 / -1;
+}
+
+.chart-empty {
+  padding: 3rem 2rem;
+  text-align: center;
   color: #64748b;
   font-size: 0.875rem;
 }
