@@ -93,8 +93,45 @@ export const updateInvoice = async (req: Request, res: Response, next: NextFunct
       res.status(404).json({ success: false, error: 'Invoice not found' });
       return;
     }
-    await invoice.update(req.body);
-    res.json({ success: true, data: invoice });
+
+    const updateData = { ...req.body };
+
+    // Validate and sanitize sales_order_id
+    if (updateData.sales_order_id !== undefined) {
+      // Convert empty string, null, or 0 to null
+      if (!updateData.sales_order_id || updateData.sales_order_id === '' || updateData.sales_order_id === 0) {
+        updateData.sales_order_id = null;
+      } else {
+        // Validate that the sales_order exists if a value is provided
+        const salesOrderId = parseInt(updateData.sales_order_id);
+        if (isNaN(salesOrderId)) {
+          res.status(400).json({ success: false, error: 'Invalid sales_order_id' });
+          return;
+        }
+        const salesOrder = await SalesOrder.findByPk(salesOrderId);
+        if (!salesOrder) {
+          // If sales_order doesn't exist, set to null instead of failing
+          logger.warn('Sales order not found, setting sales_order_id to null', { 
+            invoiceId: invoice.id, 
+            salesOrderId 
+          });
+          updateData.sales_order_id = null;
+        } else {
+          updateData.sales_order_id = salesOrderId;
+        }
+      }
+    }
+
+    await invoice.update(updateData);
+    
+    const updatedInvoice = await Invoice.findByPk(invoice.id, {
+      include: [
+        { model: Project, as: 'project' },
+        { model: SalesOrder, as: 'sales_order' },
+      ],
+    });
+
+    res.json({ success: true, data: updatedInvoice });
   } catch (error: any) {
     next(error);
   }

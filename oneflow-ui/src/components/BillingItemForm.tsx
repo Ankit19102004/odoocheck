@@ -196,7 +196,13 @@ const BillingItemForm: React.FC<BillingItemFormProps> = ({ type, item, onClose, 
     
     // Convert string numbers to actual numbers
     if (submitData.project_id) submitData.project_id = parseInt(submitData.project_id);
-    if (submitData.sales_order_id) submitData.sales_order_id = parseInt(submitData.sales_order_id);
+    // Handle sales_order_id - convert empty string to null, or parse if valid
+    if (submitData.sales_order_id === '' || !submitData.sales_order_id) {
+      submitData.sales_order_id = null;
+    } else {
+      const parsedId = parseInt(submitData.sales_order_id);
+      submitData.sales_order_id = isNaN(parsedId) ? null : parsedId;
+    }
     if (submitData.amount) submitData.amount = parseFloat(submitData.amount);
     if (submitData.total_amount) submitData.total_amount = parseFloat(submitData.total_amount);
 
