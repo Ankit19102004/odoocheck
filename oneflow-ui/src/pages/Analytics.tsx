@@ -1,7 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
 import { FiBarChart2, FiTrendingUp, FiTrendingDown } from 'react-icons/fi';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 import './Analytics.css';
 
 const Analytics: React.FC = () => {
@@ -23,6 +36,35 @@ const Analytics: React.FC = () => {
       return response.data.data;
     },
     retry: 1,
+  });
+
+  const { data: invoices, isLoading: invoicesLoading } = useQuery({
+    queryKey: ['invoices'],
+    queryFn: async () => {
+      try {
+        const response = await api.get('/api/invoices');
+        return response.data.data || [];
+      } catch (error) {
+        console.error('Failed to load invoices:', error);
+        return [];
+      }
+    },
+    retry: 1,
+  });
+
+  const { data: vendorBills, isLoading: vendorBillsLoading } = useQuery({
+    queryKey: ['vendor-bills'],
+    queryFn: async () => {
+      try {
+        const response = await api.get('/api/vendor-bills');
+        return response.data.data || [];
+      } catch (error) {
+        console.error('Failed to load vendor bills:', error);
+        return [];
+      }
+    },
+    retry: 1,
+    enabled: true, // Will fail gracefully if user doesn't have permission
   });
 
   // Calculate analytics
@@ -70,6 +112,65 @@ const Analytics: React.FC = () => {
     ? `${completionRateChange.toFixed(1)}% from last view`
     : 'No change';
 
+  // Prepare chart data
+  const projectStatusData = useMemo(() => {
+    if (!projects) return [];
+    const statusCounts: Record<string, number> = {};
+    projects.forEach((p: any) => {
+      const status = p.status || 'unknown';
+      statusCounts[status] = (statusCounts[status] || 0) + 1;
+    });
+    return Object.entries(statusCounts).map(([name, value]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1).replace('_', ' '),
+      value,
+    }));
+  }, [projects]);
+
+  const taskStatusData = useMemo(() => {
+    if (!tasks) return [];
+    const statusCounts: Record<string, number> = {};
+    tasks.forEach((t: any) => {
+      const status = t.status || 'unknown';
+      statusCounts[status] = (statusCounts[status] || 0) + 1;
+    });
+    return Object.entries(statusCounts).map(([name, value]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1).replace('_', ' '),
+      value,
+    }));
+  }, [tasks]);
+
+  const billsData = useMemo(() => {
+    const invoicesList = invoices || [];
+    const billsList = vendorBills || [];
+    
+    const totalRevenue = invoicesList.reduce((sum: number, inv: any) => {
+      return sum + (parseFloat(inv.amount?.toString() || '0'));
+    }, 0);
+
+    const totalExpenses = billsList.reduce((sum: number, bill: any) => {
+      return sum + (parseFloat(bill.amount?.toString() || '0'));
+    }, 0);
+
+    const paidRevenue = invoicesList
+      .filter((inv: any) => inv.state === 'paid')
+      .reduce((sum: number, inv: any) => {
+        return sum + (parseFloat(inv.amount?.toString() || '0'));
+      }, 0);
+
+    const paidExpenses = billsList
+      .filter((bill: any) => bill.state === 'paid')
+      .reduce((sum: number, bill: any) => {
+        return sum + (parseFloat(bill.amount?.toString() || '0'));
+      }, 0);
+
+    return [
+      { name: 'Revenue', total: totalRevenue, paid: paidRevenue },
+      { name: 'Expenses', total: totalExpenses, paid: paidExpenses },
+    ];
+  }, [invoices, vendorBills]);
+
+  const COLORS = ['#4a7cff', '#9B8FA8', '#F5C2A0', '#16a34a', '#ef4444', '#f59e0b'];
+
   return (
     <div className="analytics-container">
       <div className="analytics-header">
@@ -79,7 +180,7 @@ const Analytics: React.FC = () => {
         </div>
       </div>
 
-      {projectsLoading || tasksLoading ? (
+      {projectsLoading || tasksLoading || invoicesLoading || vendorBillsLoading ? (
         <div className="loading">Loading analytics...</div>
       ) : (
         <>
@@ -134,13 +235,82 @@ const Analytics: React.FC = () => {
           </div>
 
           <div className="analytics-charts">
-            <div className="chart-placeholder">
+            {/* Projects Status Chart */}
+            <div className="chart-card">
               <h3>Project Status Distribution</h3>
-              <p>Chart visualization will be implemented here</p>
+              {projectStatusData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={projectStatusData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {projectStatusData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="chart-empty">No project data available</div>
+              )}
             </div>
-            <div className="chart-placeholder">
-              <h3>Task Completion Trends</h3>
-              <p>Chart visualization will be implemented here</p>
+
+            {/* Tasks Status Chart */}
+            <div className="chart-card">
+              <h3>Task Status Distribution</h3>
+              {taskStatusData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={taskStatusData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {taskStatusData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="chart-empty">No task data available</div>
+              )}
+            </div>
+
+            {/* Bills Revenue vs Expenses Chart */}
+            <div className="chart-card chart-card-full">
+              <h3>Revenue vs Expenses</h3>
+              {billsData.length > 0 && (billsData[0].total > 0 || billsData[1].total > 0) ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={billsData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip 
+                      formatter={(value: number) => `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    />
+                    <Legend />
+                    <Bar dataKey="total" fill="#4a7cff" name="Total" />
+                    <Bar dataKey="paid" fill="#16a34a" name="Paid" />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="chart-empty">No billing data available</div>
+              )}
             </div>
           </div>
         </>
