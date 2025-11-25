@@ -1,16 +1,33 @@
 :root {
+  /* Typography */
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Brand color palette */
+  --color-primary: #083A4F;
+  --color-secondary: #407E8C;
+  --color-platinum: #E5E1DD;
+  --color-glacier: #C0D5D6;
+  --color-ice: #C0D5D6;
+
+  --text-default: #083A4F;
+  --muted-text: rgba(8, 58, 79, 0.72);
+  --glass-overlay: rgba(255,255,255,0.55);
+  --shadow-soft: 0 8px 24px rgba(8,58,79,0.12);
+
+  color-scheme: light;
+  color: var(--text-default);
+  background-color: var(--color-ice);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  font-size: 112.5%;
 }
 
 * {
@@ -23,60 +40,62 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #F5C2A0;
-  font-size: 20px;
+  background-color: var(--color-ice);
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
-  background-color: #F5C2A0;
+  background: linear-gradient(180deg, var(--color-ice) 0%, var(--color-glacier) 100%);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #000000;
-    background-color: #ffffff;
+    /* keep light scheme consistent with palette */
+    color: var(--text-default);
+    background-color: var(--color-ice);
   }
 }
 
 /* Default text color for better readability */
 body {
-  color: #1a1a1a;
+  color: var(--text-default);
 }
 
 h1 {
-  font-size: 4rem;
-  color: #8B4A3A;
+  font-size: 2.8rem;
+  color: var(--text-default);
   font-weight: 700;
+  font-family: 'Playfair Display', Georgia, serif;
 }
 
 h2 {
-  font-size: 3.2rem;
-  color: #8B4A3A;
+  font-size: 2rem;
+  color: var(--text-default);
   font-weight: 700;
 }
 
 h3 {
-  font-size: 2.5rem;
-  color: #8B4A3A;
+  font-size: 1.5rem;
+  color: var(--text-default);
   font-weight: 600;
 }
 
 h4 {
-  font-size: 2rem;
-  color: #8B4A3A;
+  font-size: 1.125rem;
+  color: var(--text-default);
   font-weight: 600;
 }
 
 h5, h6 {
-  font-size: 1.7rem;
-  color: #8B4A3A;
+  font-size: 1rem;
+  color: var(--text-default);
   font-weight: 600;
 }
 
 p, span, div {
-  color: #B87A6A;
-  font-size: 1.25rem;
+  color: var(--muted-text);
+  font-size: 1.05rem;
 }
-

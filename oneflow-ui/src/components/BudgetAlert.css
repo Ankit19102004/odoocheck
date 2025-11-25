@@ -43,8 +43,8 @@
 }
 
 .budget-alert-warning {
-  border-left-color: #facc15;
-  background: #fef9c3;
+  border-left-color: var(--color-secondary);
+  background: var(--color-ice);
 }
 
 .budget-alert-danger {
@@ -71,7 +71,7 @@
 }
 
 .alert-icon.warning {
-  color: #facc15;
+  color: var(--color-secondary);
 }
 
 .alert-icon.danger {

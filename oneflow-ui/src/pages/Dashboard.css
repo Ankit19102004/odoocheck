@@ -1,7 +1,7 @@
 /* Container */
 .dashboard-container {
   padding: 0;
-  background-color: #F5C2A0;
+  background-color: var(--color-ice);
   min-height: 100vh;
   font-family: "Inter", sans-serif;
 }
@@ -12,21 +12,21 @@
 }
 
 .dashboard-header h1 {
-  font-size: 4rem;
+  font-size: 4.4rem;
   font-weight: 700;
-  color: #8B4A3A;
-  margin-bottom: 0.5rem;
+  color: var(--text-default);
+  margin-bottom: 0.75rem;
 }
 
 .dashboard-header p {
-  color: #B87A6A;
-  font-size: 1.5rem;
+  color: var(--muted-text);
+  font-size: 1.7rem;
 }
 
 /* Welcome Banner */
 .welcome-banner {
-  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
-  color: #8B4A3A;
+  background: linear-gradient(90deg, var(--color-glacier) 0%, var(--color-secondary) 100%);
+  color: var(--text-default);
   padding: 2.5rem;
   border-radius: 12px;
   margin-bottom: 2rem;
@@ -43,7 +43,7 @@
   font-size: 2.8rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #8B4A3A;
+  color: var(--text-default);
 }
 
 .welcome-text h2 strong {
@@ -53,7 +53,7 @@
 .welcome-text p {
   font-size: 1.4rem;
   opacity: 0.95;
-  color: #8B4A3A;
+  color: var(--muted-text);
   margin: 0;
 }
 
@@ -104,8 +104,8 @@
 }
 
 .stat-icon.yellow {
-  background: #fef9c3;
-  color: #eab308;
+  background: var(--color-ice);
+  color: var(--color-secondary);
 }
 
 .stat-icon.red {
@@ -114,8 +114,8 @@
 }
 
 .stat-icon.blue {
-  background: #F5C2A0;
-  color: #9B8FA8;
+  background: var(--color-ice);
+  color: var(--color-secondary);
 }
 
 .stat-content {
@@ -124,7 +124,7 @@
 
 .stat-content h3 {
   font-size: 1.3rem;
-  color: #B87A6A;
+  color: var(--muted-text);
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
@@ -132,7 +132,7 @@
 .stat-value {
   font-size: 3rem;
   font-weight: 700;
-  color: #8B4A3A;
+  color: var(--text-default);
   margin-bottom: 0.25rem;
 }
 
@@ -163,12 +163,12 @@
 .projects-header h2 {
   font-size: 3.2rem;
   font-weight: 700;
-  color: #8B4A3A;
+  color: var(--text-default);
   margin-bottom: 0.5rem;
 }
 
 .projects-header p {
-  color: #B87A6A;
+  color: var(--muted-text);
   font-size: 1.4rem;
 }
 
@@ -258,7 +258,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #F5C2A0, #9B8FA8);
+  background: linear-gradient(90deg, #38ACEC, #9B8FA8);
   transition: width 0.3s;
 }
 
@@ -292,7 +292,7 @@
 
 .project-status-badge {
   padding: 0.5rem 1rem;
-  background: linear-gradient(90deg, #F5C2A0, #9B8FA8);
+  background: linear-gradient(90deg, #38ACEC, #9B8FA8);
   color: #8B4A3A;
   border-radius: 6px;
   font-size: 1rem;

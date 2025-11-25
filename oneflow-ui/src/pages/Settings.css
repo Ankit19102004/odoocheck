@@ -10,12 +10,12 @@
 .settings-header h1 {
   font-size: 4rem;
   font-weight: 700;
-  color: #8B4A3A;
+  color: var(--text-default);
   margin-bottom: 0.5rem;
 }
 
 .settings-header p {
-  color: #B87A6A;
+  color: var(--muted-text);
   font-size: 1.5rem;
 }
 
@@ -28,12 +28,12 @@
 .section-header h2 {
   font-size: 3.2rem;
   font-weight: 700;
-  color: #8B4A3A;
+  color: var(--text-default);
   margin-bottom: 0.5rem;
 }
 
 .section-header p {
-  color: #B87A6A;
+  color: var(--muted-text);
   font-size: 1.4rem;
 }
 
@@ -61,7 +61,7 @@
 
 /* Highlight active role */
 .active-role {
-  border: 2px solid #9B8FA8;
+  border: 2px solid var(--color-secondary);
 }
 
 /* Role Header */
@@ -87,7 +87,7 @@
 .role-header h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-default);
   margin: 0;
   flex: 1;
 }

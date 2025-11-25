@@ -6,14 +6,14 @@
 }
 
 .kanban-column {
-  background: #F5C2A0;
+  background: var(--color-ice);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   min-height: 500px;
   max-height: calc(100vh - 200px);
-  border: 1px solid #B87A6A;
+  border: 1px solid var(--color-secondary);
 }
 
 .kanban-column-header {
@@ -39,7 +39,7 @@
 .column-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #8B4A3A;
+  color: var(--text-default);
   margin: 0;
 }
 
@@ -112,7 +112,7 @@
 .task-edit-btn {
   background: none;
   border: none;
-  color: #9B8FA8;
+  color: var(--color-secondary);
   cursor: pointer;
   padding: 0.25rem;
   display: flex;
@@ -124,14 +124,14 @@
 }
 
 .task-edit-btn:hover {
-  background: #E8D5F0;
-  color: #8B4A3A;
+  background: var(--color-ice);
+  color: var(--text-default);
 }
 
 .task-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #8B4A3A;
+  color: var(--text-default);
   margin: 0;
   flex: 1;
   line-height: 1.3;
@@ -165,8 +165,8 @@
 .task-project-tag {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
-  color: #8B4A3A;
+  background: linear-gradient(90deg, var(--color-ice) 0%, var(--color-secondary) 100%);
+  color: var(--text-default);
   border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 600;
@@ -190,7 +190,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.9rem;
-  color: #B87A6A;
+  color: var(--muted-text);
   flex: 1;
   font-weight: 500;
   overflow: hidden;
@@ -218,8 +218,8 @@
 }
 
 .task-priority.priority-medium {
-  background: #fef9c3;
-  color: #ca8a04;
+  background: var(--color-ice);
+  color: var(--color-secondary);
 }
 
 .task-priority.priority-low {

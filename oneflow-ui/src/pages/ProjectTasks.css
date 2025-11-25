@@ -1,6 +1,6 @@
 .task-page {
   padding: 2rem;
-  background-color: #F5C2A0;
+  background-color: #38ACEC;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
 }
@@ -26,7 +26,7 @@
 }
 
 .create-task-btn {
-  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
+  background: linear-gradient(90deg, #38ACEC 0%, #9B8FA8 100%);
   color: #8B4A3A;
   padding: 1rem 2rem;
   border: none;
@@ -115,7 +115,7 @@
 }
 
 .priority-medium {
-  color: #f59e0b;
+  color: var(--color-secondary);
   font-weight: 600;
 }
 

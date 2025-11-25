@@ -86,7 +86,7 @@
   border-radius: 10px;
   font-size: 1.3rem;
   color: #8B4A3A;
-  background: #F5C2A0;
+  background: #38ACEC;
   transition: all 0.2s;
   font-family: inherit;
 }
@@ -131,7 +131,7 @@
 }
 
 .task-form-content .btn-primary {
-  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
+  background: linear-gradient(90deg, #38ACEC 0%, #9B8FA8 100%);
   color: #8B4A3A;
   font-size: 1.3rem;
   font-weight: 600;
@@ -223,7 +223,7 @@
 .suggested-assignees {
   margin-top: 1rem;
   padding: 1rem;
-  background: #F5C2A0;
+  background: #38ACEC;
   border-radius: 8px;
   border: 1px solid #B87A6A;
 }

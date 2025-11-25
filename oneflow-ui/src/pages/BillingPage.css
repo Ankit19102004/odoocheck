@@ -1,6 +1,6 @@
 .billing-page {
   padding: 2rem;
-  background-color: #F5C2A0;
+  background-color: #38ACEC;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
 }
@@ -13,20 +13,20 @@
 }
 
 .billing-title {
-  font-size: 4rem;
+  font-size: 4.4rem;
   font-weight: 700;
   color: #8B4A3A;
   margin: 0;
 }
 
 .billing-subtitle {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: #B87A6A;
   margin-top: 0.25rem;
 }
 
 .new-entry-btn {
-  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
+  background: linear-gradient(90deg, #38ACEC 0%, #9B8FA8 100%);
   color: #8B4A3A;
   padding: 1rem 2rem;
   border: none;
@@ -90,7 +90,7 @@
 }
 
 .summary-icon.yellow {
-  color: #facc15;
+  color: var(--color-secondary);
 }
 
 .summary-icon.red {
@@ -123,7 +123,7 @@
 }
 
 .yellow-border {
-  border-left: 4px solid #facc15;
+  border-left: 4px solid var(--color-secondary);
 }
 
 .red-border {
@@ -239,8 +239,8 @@ td {
 }
 
 .status.sent {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--color-ice);
+  color: var(--color-secondary);
 }
 
 .status.paid {

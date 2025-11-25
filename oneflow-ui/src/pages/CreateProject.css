@@ -1,19 +1,19 @@
 .create-project-container {
-  background-color: #F5C2A0;
+  background-color: var(--color-ice);
   min-height: 100vh;
   padding: 2rem;
   font-family: "Inter", sans-serif;
-  color: #8B4A3A;
+  color: var(--text-default);
 }
 
 .create-project-container h1 {
   font-size: 4rem;
   font-weight: 700;
-  color: #8B4A3A;
+  color: var(--text-default);
 }
 
 .subtitle {
-  color: #B87A6A;
+  color: var(--muted-text);
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
 }
@@ -39,7 +39,7 @@ label {
   display: flex;
   flex-direction: column;
   font-weight: 600;
-  color: #B87A6A;
+  color: var(--text-default);
   font-size: 1.3rem;
 }
 
@@ -48,11 +48,11 @@ select,
 textarea {
   margin-top: 0.4rem;
   padding: 1rem;
-  border: 1px solid #B87A6A;
+  border: 1px solid var(--color-secondary);
   border-radius: 10px;
   font-size: 1.3rem;
-  color: #8B4A3A;
-  background: #F5C2A0;
+  color: var(--text-default);
+  background: var(--color-ice);
   outline: none;
   transition: border 0.2s ease;
 }
@@ -60,8 +60,8 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #9B8FA8;
-  box-shadow: 0 0 0 3px rgba(232, 213, 240, 0.2);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(8, 58, 79, 0.15);
   background: #ffffff;
 }
 
@@ -150,17 +150,17 @@ textarea {
 }
 
 .create-btn {
-  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
-  color: #8B4A3A;
+  background: linear-gradient(90deg, var(--color-ice) 0%, var(--color-secondary) 100%);
+  color: var(--text-default);
   font-size: 1.3rem;
   font-weight: 600;
   padding: 1rem 2rem;
 }
 
 .create-btn:hover {
-  background: linear-gradient(90deg, #9B8FA8 0%, #D8C5E0 100%);
+  background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(232, 213, 240, 0.4);
+  box-shadow: 0 4px 12px rgba(8, 58, 79, 0.25);
 }
 
 /* Responsive */

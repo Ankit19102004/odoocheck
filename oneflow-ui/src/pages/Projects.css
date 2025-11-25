@@ -10,15 +10,15 @@
 }
 
 .projects-header h1 {
-  font-size: 4rem;
+  font-size: 4.4rem;
   font-weight: 700;
   color: #8B4A3A;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .projects-header p {
   color: #B87A6A;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
 }
 
 .projects-actions {
@@ -48,7 +48,7 @@
   border: 1px solid #B87A6A;
   border-radius: 10px;
   font-size: 1.3rem;
-  background: #F5C2A0;
+  background: #38ACEC;
   color: #8B4A3A;
   outline: none;
   transition: all 0.2s;
@@ -65,7 +65,7 @@
   border: 1px solid #B87A6A;
   border-radius: 10px;
   font-size: 1.3rem;
-  background: #F5C2A0;
+  background: #38ACEC;
   color: #8B4A3A;
   cursor: pointer;
   transition: all 0.2s;
@@ -88,7 +88,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem 2rem;
-  background: linear-gradient(90deg, #F5C2A0 0%, #9B8FA8 100%);
+  background: linear-gradient(90deg, #38ACEC 0%, #9B8FA8 100%);
   color: #8B4A3A;
   border: none;
   border-radius: 10px;
@@ -218,7 +218,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #F5C2A0, #9B8FA8);
+  background: linear-gradient(90deg, #38ACEC, #9B8FA8);
   transition: width 0.3s;
 }
 
@@ -253,7 +253,7 @@
 
 .project-status-badge {
   padding: 0.5rem 1rem;
-  background: linear-gradient(90deg, #F5C2A0, #9B8FA8);
+  background: linear-gradient(90deg, #38ACEC, #9B8FA8);
   color: #8B4A3A;
   border-radius: 6px;
   font-size: 1rem;
@@ -290,4 +290,3 @@
 .team-avatar:first-child {
   margin-left: 0;
 }
-
